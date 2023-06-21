@@ -8,6 +8,12 @@ import logo from '../../assets/logo.svg'
 
 export function Header() {
   const { coffeeList } = useContext(CoffeeContext)
+
+  const totalItems = coffeeList.reduce(
+    (sum, coffee) => sum + Number(coffee.coffeeAmount),
+    0,
+  )
+
   const badgeStyle = {
     '& .MuiBadge-badge': {
       backgroundColor: '#C47F17',
@@ -29,7 +35,7 @@ export function Header() {
         </AddressDivision>
 
         <NavLink to={'/entrega'}>
-          <Badge badgeContent={coffeeList.length} sx={badgeStyle}>
+          <Badge badgeContent={totalItems} sx={badgeStyle}>
             <button>
               <ShoppingCart size={19.25} weight="fill" />
             </button>

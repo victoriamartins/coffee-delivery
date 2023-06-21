@@ -28,13 +28,32 @@ export function CoffeeContextProvider({
 }: CoffeeContextProviderProps) {
   const [coffeeList, setCoffeeList] = useState<CoffeeListInterface[]>([])
 
+  // todo: this has to be shorter and cleaner, it'll probably go to usereduce!
   function addCoffeeToCart(
     id: string,
     coffeeAmount: number,
     price: number,
     imageName: string,
   ) {
-    setCoffeeList((state) => [...state, { id, coffeeAmount, price, imageName }])
+    // setCoffeeList((state) => [...state, { id, coffeeAmount, price, imageName }])
+    const coffeeToReplace = coffeeList.find((coffee) => coffee.id === id)
+    if (coffeeToReplace) {
+      const indexOfReplacement = coffeeList.indexOf(coffeeToReplace)
+
+      const newCoffeeList = coffeeList.map((coffee, index) => {
+        if (indexOfReplacement === index) {
+          const newAmount = Number(coffee.coffeeAmount) + Number(coffeeAmount)
+          return { ...coffee, coffeeAmount: newAmount }
+        }
+        return coffee
+      })
+      setCoffeeList(newCoffeeList)
+    } else {
+      setCoffeeList((state) => [
+        ...state,
+        { id, coffeeAmount, price, imageName },
+      ])
+    }
   }
 
   return (

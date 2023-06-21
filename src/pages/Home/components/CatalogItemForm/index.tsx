@@ -11,11 +11,12 @@ interface ItemFormProps {
 }
 
 export function CatalogItemForm(props: ItemFormProps) {
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, reset } = useForm()
   const { addCoffeeToCart } = useContext(CoffeeContext)
 
   const handleAddToCart = (data: any) => {
     addCoffeeToCart(props.name, data.coffeeAmount, props.price, props.imageName)
+    reset()
   }
   return (
     <FormContainer onSubmit={handleSubmit(handleAddToCart)}>
