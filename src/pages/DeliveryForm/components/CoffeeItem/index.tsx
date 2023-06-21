@@ -6,6 +6,8 @@ import {
   ItemHeader,
   RemoveItemButton,
 } from './styles'
+import { ChangeEvent, useContext, useState } from 'react'
+import { CoffeeContext } from '../../../../contexts/CoffeeContext'
 
 interface CoffeeItemProps {
   name: string
@@ -20,6 +22,23 @@ export function CoffeeItem({
   imageName,
   coffeeAmount,
 }: CoffeeItemProps) {
+  const { addCoffeeToCart, removeCoffeeFromCart } = useContext(CoffeeContext)
+  const [amountChangedOnCart, setAmountChangedOnCart] = useState(coffeeAmount)
+
+  function handleNewAmountOfCoffee(event: ChangeEvent<HTMLInputElement>) {
+    setAmountChangedOnCart(Number(event.target.value))
+    addCoffeeToCart(
+      name,
+      Math.abs(Number(event.target.value) - amountChangedOnCart),
+      price,
+      imageName,
+    )
+  }
+
+  function handleRemoveFromCoffeeList() {
+    removeCoffeeFromCart(name)
+  }
+
   return (
     <CoffeeItemContainer>
       <img
@@ -34,12 +53,12 @@ export function CoffeeItem({
         <ItemFooter>
           <input
             type="number"
-            name="addCoffee"
             id="addCoffee"
             min={1}
-            defaultValue={coffeeAmount}
+            value={amountChangedOnCart}
+            onChange={handleNewAmountOfCoffee}
           />
-          <RemoveItemButton>
+          <RemoveItemButton onClick={handleRemoveFromCoffeeList}>
             <Trash size={16} />
             <span>Remover</span>
           </RemoveItemButton>

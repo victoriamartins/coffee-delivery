@@ -15,6 +15,7 @@ interface CoffeeContextInterface {
     price: number,
     imageName: string,
   ) => void
+  removeCoffeeFromCart: (id: string) => void
 }
 
 interface CoffeeContextProviderProps {
@@ -56,8 +57,15 @@ export function CoffeeContextProvider({
     }
   }
 
+  function removeCoffeeFromCart(id: string) {
+    const newCoffeeList = coffeeList.filter((coffee) => coffee.id !== id)
+    setCoffeeList(newCoffeeList)
+  }
+
   return (
-    <CoffeeContext.Provider value={{ coffeeList, addCoffeeToCart }}>
+    <CoffeeContext.Provider
+      value={{ coffeeList, addCoffeeToCart, removeCoffeeFromCart }}
+    >
       {children}
     </CoffeeContext.Provider>
   )
