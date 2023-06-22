@@ -30,6 +30,9 @@ export const AddItemToCart = styled.div`
     line-height: 1.3;
     text-align: center;
     padding: 0.5rem;
+    &:focus {
+      outline: 1px solid ${(props) => props.theme['yellow-300']};
+    }
   }
 `
 export const ButtonCart = styled.button`

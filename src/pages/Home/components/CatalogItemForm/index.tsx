@@ -32,7 +32,7 @@ export function CatalogItemForm(props: ItemFormProps) {
           step={1}
           min={1}
           required
-          {...register('coffeeAmount')}
+          {...register('coffeeAmount', { valueAsNumber: true })}
         />
 
         <ButtonCart type="submit">

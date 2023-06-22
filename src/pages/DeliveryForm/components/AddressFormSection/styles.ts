@@ -25,6 +25,7 @@ export const InputContainer = styled.div`
   input {
     background-color: ${(props) => props.theme['gray-300']};
     border: 1px solid ${(props) => props.theme['gray-500']};
+    color: ${(props) => props.theme['gray-900']};
     border-radius: 6px;
     padding: 0.75rem;
 

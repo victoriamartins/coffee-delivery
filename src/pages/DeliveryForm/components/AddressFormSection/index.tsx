@@ -1,28 +1,51 @@
 import { InputContainer } from './styles'
+import { useFormContext } from 'react-hook-form'
 
 export function AddressForm() {
+  const { register } = useFormContext()
   return (
     <InputContainer>
-      <input type="text" name="zipCode" id="zipCode" placeholder="CEP" />
-      <input type="text" name="street" id="street" placeholder="Rua" />
+      <input
+        type="text"
+        id="zipCode"
+        placeholder="CEP"
+        {...register('zipCode')}
+      />
+      <input
+        type="text"
+        id="street"
+        placeholder="Rua"
+        {...register('street')}
+      />
       <div>
-        <input type="number" name="number" id="number" placeholder="Número" />
+        <input
+          type="number"
+          id="number"
+          placeholder="Número"
+          min={0}
+          {...register('stNumber', { valueAsNumber: true })}
+        />
         <input
           type="text"
-          name="additionalInfo"
           id="additionalInfo"
           placeholder="Complemento (opcional)"
+          {...register('additionalInfo')}
         />
       </div>
       <div>
         <input
           type="text"
-          name="neighborhood"
           id="neighborhood"
           placeholder="Bairro"
+          {...register('neighborhood')}
         />
-        <input type="text" name="city" id="city" placeholder="Cidade" />
-        <input type="text" name="state" id="state" placeholder="UF" />
+        <input
+          type="text"
+          id="city"
+          placeholder="Cidade"
+          {...register('city')}
+        />
+        <input type="text" id="state" placeholder="UF" {...register('state')} />
       </div>
     </InputContainer>
   )
