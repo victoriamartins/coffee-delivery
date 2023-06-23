@@ -32,10 +32,12 @@ export const HeroContainer = styled.div`
 
 export const HeroDivision = styled.main`
   padding-block: 4.5rem;
+  color: ${(props) => props.theme['gray-950']};
   h2 {
     line-height: 1.3;
     font-size: 3rem;
     font-family: 'Baloo 2', cursive;
+
     font-weight: 900;
     margin-bottom: 1rem;
   }

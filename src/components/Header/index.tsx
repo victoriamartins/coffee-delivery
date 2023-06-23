@@ -7,19 +7,18 @@ import { NavLink } from 'react-router-dom'
 import logo from '../../assets/logo.svg'
 
 export function Header() {
-  const { coffeeList } = useContext(CoffeeContext)
-
+  const { coffeeList, deliveryInfo } = useContext(CoffeeContext)
   const totalItems = coffeeList.reduce(
     (sum, coffee) => sum + Number(coffee.coffeeAmount),
     0,
   )
-
   const badgeStyle = {
     '& .MuiBadge-badge': {
       backgroundColor: '#C47F17',
       color: '#F3F2F2',
     },
   }
+
   return (
     <StyledHeader>
       <NavLink to={'/'}>
@@ -31,7 +30,12 @@ export function Header() {
       <CartDivision>
         <AddressDivision>
           <MapPin size={19.25} weight="fill" />
-          <span>Place, SP</span>
+          <span>
+            {deliveryInfo?.city && deliveryInfo?.state
+              ? `
+            ${deliveryInfo.city} - ${deliveryInfo.state}`
+              : `Entregamos na sua casa`}
+          </span>
         </AddressDivision>
 
         <NavLink to={'/entrega'}>

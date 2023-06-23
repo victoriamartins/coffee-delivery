@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const FormContainer = styled.form`
   margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
   padding-inline: 10rem;
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -70,5 +71,35 @@ export const PaymentHeader = styled(BaseHeader)`
 export const CoffeeListInCart = styled.div`
   > div + div {
     margin-top: 1.5rem;
+  }
+`
+
+export const EmptyCartContainer = styled.form`
+  margin-top: 2.5rem;
+  padding-inline: 10rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 1.2rem;
+  font-family: 'baloo 2', cursive;
+  color: ${(props) => props.theme['yellow-300']};
+
+  p {
+    font-size: 1rem;
+    font-family: 'roboto', sans-serif;
+    color: ${(props) => props.theme['gray-950']};
+    a {
+      color: ${(props) => props.theme['purple-200']};
+    }
+  }
+
+  @media (max-width: 550px) {
+    padding-inline: 1rem;
+  }
+  @media (min-width: 551px) and (max-width: 850px) {
+    padding-inline: 2rem;
+  }
+  @media (min-width: 851px) and (max-width: 1150px) {
+    padding-inline: 5rem;
   }
 `

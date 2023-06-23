@@ -4,6 +4,7 @@ import {
   CoffeeListInCart,
   DeliveryHeader,
   DeliveryInfoDivision,
+  EmptyCartContainer,
   FormContainer,
   PaymentHeader,
   Subtitle,
@@ -15,7 +16,7 @@ import { useContext } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CoffeeContext } from '../../contexts/CoffeeContext'
-import { useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import * as zod from 'zod'
 
 const validationOfDeliverySchema = zod.object({
@@ -32,6 +33,24 @@ const validationOfDeliverySchema = zod.object({
 export type DeliveryFormData = zod.infer<typeof validationOfDeliverySchema>
 
 export function DeliveryForm() {
+  const { coffeeList } = useContext(CoffeeContext)
+
+  return coffeeList.length > 0 ? <Form /> : <EmptyCart />
+}
+
+function EmptyCart() {
+  return (
+    <EmptyCartContainer>
+      <h2>{'Seu carrinho está vazio :('}</h2>
+      <p>
+        Volte para o <NavLink to={'/'}>menu</NavLink> e escolha o café que mais
+        gosta!
+      </p>
+    </EmptyCartContainer>
+  )
+}
+
+function Form() {
   const { coffeeList, addDeliveryInfo, deleteCart } = useContext(CoffeeContext)
   const navigate = useNavigate()
   const deliveryForm = useForm<DeliveryFormData>({
@@ -66,7 +85,6 @@ export function DeliveryForm() {
     deleteCart()
     navigate('/confirmacao')
   }
-
   return (
     <FormContainer onSubmit={handleSubmit(submitDeliveryInfo)}>
       <FormProvider {...deliveryForm}>
