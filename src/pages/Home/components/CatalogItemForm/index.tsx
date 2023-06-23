@@ -1,8 +1,9 @@
 import { ShoppingCart } from 'phosphor-react'
 import { FormContainer, AddItemToCart, ButtonCart, PriceTag } from './styles'
 import { useForm } from 'react-hook-form'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { CoffeeContext } from '../../../../contexts/CoffeeContext'
+import { CartNotification } from '../../../../components/CartNotification'
 
 interface ItemFormProps {
   price: number
@@ -13,11 +14,22 @@ interface ItemFormProps {
 export function CatalogItemForm(props: ItemFormProps) {
   const { register, handleSubmit, reset } = useForm()
   const { addCoffeeToCart } = useContext(CoffeeContext)
+  const [showNotification, setShowNotification] = useState(false)
+
+  function handleShow() {
+    setShowNotification(true)
+    const timer = setTimeout(() => {
+      setShowNotification(false)
+    }, 2500)
+    return () => clearTimeout(timer)
+  }
 
   const handleAddToCart = (data: any) => {
     addCoffeeToCart(props.name, data.coffeeAmount, props.price, props.imageName)
     reset()
+    handleShow()
   }
+
   return (
     <FormContainer onSubmit={handleSubmit(handleAddToCart)}>
       <div>
@@ -39,6 +51,7 @@ export function CatalogItemForm(props: ItemFormProps) {
           <ShoppingCart size={16} weight="fill" />
         </ButtonCart>
       </AddItemToCart>
+      {showNotification && <CartNotification />}
     </FormContainer>
   )
 }

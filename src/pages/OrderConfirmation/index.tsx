@@ -1,5 +1,6 @@
 import { CurrencyDollarSimple, MapPin, Timer } from 'phosphor-react'
 import image from '../../assets/successimg.png'
+import { useContext } from 'react'
 import {
   DeliveryInfo,
   GradientBorder,
@@ -8,8 +9,10 @@ import {
   ImageContainer,
   PageContainer,
 } from './styles'
+import { CoffeeContext } from '../../contexts/CoffeeContext'
 
 export function OrderConfirmation() {
+  const { deliveryInfo } = useContext(CoffeeContext)
   return (
     <PageContainer>
       <section>
@@ -25,9 +28,12 @@ export function OrderConfirmation() {
               </IconContainer>
               <div>
                 <p>
-                  Entrega em <strong>Rua João Daniel Martinelli, 102</strong>
+                  Entrega em{' '}
+                  <strong>
+                    {`Rua ${deliveryInfo?.street}, ${deliveryInfo?.stNumber}`}
+                  </strong>
                 </p>
-                <p>Farrapos - Porto Alegre, RS</p>
+                <p>{`${deliveryInfo?.neighborhood}, ${deliveryInfo?.city} - ${deliveryInfo?.state}`}</p>
               </div>
             </div>
             <div>
@@ -48,7 +54,7 @@ export function OrderConfirmation() {
               <div>
                 <p>Pagamento na entrega</p>
                 <p>
-                  <strong>Cartão de Crédito</strong>
+                  <strong>{deliveryInfo?.paymentOption}</strong>
                 </p>
               </div>
             </div>

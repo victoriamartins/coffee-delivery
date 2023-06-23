@@ -34,7 +34,7 @@ export function CoffeeContextProvider({
 }: CoffeeContextProviderProps) {
   const [coffeeList, setCoffeeList] = useState<CoffeeListInterface[]>([])
   const [deliveryInfo, setDeliveryInfo] = useState<DeliveryFormData>()
-  console.log(deliveryInfo)
+
   // todo: this has to be shorter and cleaner, it'll probably go to usereduce!
   function addCoffeeToCart(
     id: string,

@@ -19,6 +19,7 @@ export function Catalog() {
             />
           ))}
         </MenuItemsContainer>
+        {/* {showNotification && <CartNotification />} */}
       </MenuContainer>
     </>
   )
