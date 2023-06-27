@@ -16,7 +16,7 @@ export function CatalogItemForm(props: ItemFormProps) {
   const { addCoffeeToCart } = useContext(CoffeeContext)
   const [showNotification, setShowNotification] = useState(false)
 
-  function handleShow() {
+  function handleShowNotification() {
     setShowNotification(true)
     const timer = setTimeout(() => {
       setShowNotification(false)
@@ -27,14 +27,16 @@ export function CatalogItemForm(props: ItemFormProps) {
   const handleAddToCart = (data: any) => {
     addCoffeeToCart(props.name, data.coffeeAmount, props.price, props.imageName)
     reset()
-    handleShow()
+    handleShowNotification()
   }
+
+  const price = new Intl.NumberFormat().format(props.price).padEnd(4, '0')
 
   return (
     <FormContainer onSubmit={handleSubmit(handleAddToCart)}>
       <div>
         <span>R$</span>
-        <PriceTag>{props.price.toFixed(2)}</PriceTag>
+        <PriceTag>{price}</PriceTag>
       </div>
 
       <AddItemToCart>
@@ -51,7 +53,7 @@ export function CatalogItemForm(props: ItemFormProps) {
           <ShoppingCart size={16} weight="fill" />
         </ButtonCart>
       </AddItemToCart>
-      {showNotification && <CartNotification />}
+      {showNotification && <CartNotification coffeeName={props.name} />}
     </FormContainer>
   )
 }

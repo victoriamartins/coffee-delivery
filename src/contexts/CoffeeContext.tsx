@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from 'react'
+import { ReactNode, createContext, useState, useEffect } from 'react'
 import { DeliveryFormData } from '../pages/DeliveryForm'
 
 interface CoffeeListInterface {
@@ -33,7 +33,24 @@ export function CoffeeContextProvider({
   children,
 }: CoffeeContextProviderProps) {
   const [coffeeList, setCoffeeList] = useState<CoffeeListInterface[]>([])
-  const [deliveryInfo, setDeliveryInfo] = useState<DeliveryFormData>()
+  const [deliveryInfo, setDeliveryInfo] = useState<
+    DeliveryFormData | undefined
+  >(getStoredInfo())
+
+  useEffect(() => {
+    const stateJSON = JSON.stringify(deliveryInfo)
+    localStorage.setItem('@coffee-delivery:delivery-info:1.0.0', stateJSON)
+  }, [deliveryInfo])
+
+  function getStoredInfo() {
+    const storedAsJSON = localStorage.getItem(
+      '@coffee-delivery:delivery-info:1.0.0',
+    )
+    if (storedAsJSON && storedAsJSON !== 'undefined') {
+      return JSON.parse(storedAsJSON)
+    }
+    return undefined
+  }
 
   // todo: this has to be shorter and cleaner, it'll probably go to usereduce!
   function addCoffeeToCart(
@@ -93,7 +110,7 @@ export function CoffeeContextProvider({
     switch (rawString) {
       case 'creditCard':
         return 'Cartão de Crédito'
-      case 'debitCart':
+      case 'debitCard':
         return 'Cartão de Débito'
       default:
         return 'Dinheiro'

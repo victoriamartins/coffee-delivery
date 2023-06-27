@@ -34,7 +34,7 @@ export function Header() {
             {deliveryInfo?.city && deliveryInfo?.state
               ? `
             ${deliveryInfo.city} - ${deliveryInfo.state}`
-              : `Entregamos na sua casa`}
+              : `Local de entrega`}
           </span>
         </AddressDivision>
 

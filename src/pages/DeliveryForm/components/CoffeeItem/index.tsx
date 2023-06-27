@@ -41,7 +41,7 @@ export function CoffeeItem({
       <ItemInfo>
         <ItemHeader>
           <span>{name}</span>
-          <h3>{price.toFixed(2)}</h3>
+          <h3>{new Intl.NumberFormat().format(price).padEnd(4, '0')}</h3>
         </ItemHeader>
         <ItemFooter>
           <input

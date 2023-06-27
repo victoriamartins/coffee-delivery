@@ -1,7 +1,13 @@
 import { NotificationContainer } from './styles'
 
-export function CartNotification() {
+interface CartNotificationProps {
+  coffeeName: string
+}
+
+export function CartNotification({ coffeeName }: CartNotificationProps) {
   return (
-    <NotificationContainer>Item adicionado ao carrinho!</NotificationContainer>
+    <NotificationContainer>
+      {coffeeName + ' '} adicionado ao carrinho!
+    </NotificationContainer>
   )
 }
