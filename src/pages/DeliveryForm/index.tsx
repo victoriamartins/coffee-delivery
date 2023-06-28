@@ -9,7 +9,7 @@ import {
   PaymentHeader,
   Subtitle,
 } from './styles'
-import { AddressForm } from './components/AddressFormSection'
+import { AddressFormSection } from './components/AddressFormSection'
 import { PaymentForm } from './components/PaymentFormSection'
 import { FormSubmitSection } from './components/FormSubmitSection'
 import { useContext } from 'react'
@@ -51,24 +51,34 @@ function EmptyCart() {
 }
 
 function Form() {
-  const { coffeeList, addDeliveryInfo, deleteCart } = useContext(CoffeeContext)
+  const { coffeeList, addDeliveryInfo, deleteCart, deliveryInfo } =
+    useContext(CoffeeContext)
   const navigate = useNavigate()
+  const empytValuesToForm = {
+    zipCode: '',
+    street: '',
+    stNumber: 0,
+    additionalInfo: '',
+    neighborhood: '',
+    city: '',
+    state: '',
+    paymentOption: '',
+  }
+  const filledValuesToForm = {
+    zipCode: deliveryInfo?.zipCode,
+    street: deliveryInfo?.street,
+    stNumber: deliveryInfo?.stNumber,
+    additionalInfo: deliveryInfo?.additionalInfo,
+    neighborhood: deliveryInfo?.neighborhood,
+    city: deliveryInfo?.city,
+    state: deliveryInfo?.state,
+    paymentOption: deliveryInfo?.paymentOption,
+  }
   const deliveryForm = useForm<DeliveryFormData>({
     resolver: zodResolver(validationOfDeliverySchema),
-    defaultValues: {
-      zipCode: '',
-      street: '',
-      stNumber: 0,
-      additionalInfo: '',
-      neighborhood: '',
-      city: '',
-      state: '',
-      paymentOption: '',
-    },
+    defaultValues: deliveryInfo ? filledValuesToForm : empytValuesToForm,
   })
-  const { reset } = deliveryForm
-
-  const { handleSubmit } = deliveryForm
+  const { reset, handleSubmit } = deliveryForm
 
   const submitDeliveryInfo = (data: DeliveryFormData) => {
     addDeliveryInfo({
@@ -100,7 +110,7 @@ function Form() {
                 <p>Informe o endereço onde deseja receber seu pedido</p>
               </div>
             </DeliveryHeader>
-            <AddressForm /> {/* ----------------------- Inputs */}
+            <AddressFormSection /> {/* ----------------------- Inputs */}
           </DeliveryInfoDivision>
 
           {/* Payment Section */}

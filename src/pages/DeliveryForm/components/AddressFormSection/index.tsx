@@ -1,8 +1,9 @@
 import { InputContainer } from './styles'
 import { useFormContext } from 'react-hook-form'
 
-export function AddressForm() {
+export function AddressFormSection() {
   const { register } = useFormContext()
+
   return (
     <InputContainer>
       <input

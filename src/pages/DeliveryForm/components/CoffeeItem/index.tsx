@@ -41,7 +41,14 @@ export function CoffeeItem({
       <ItemInfo>
         <ItemHeader>
           <span>{name}</span>
-          <h3>{new Intl.NumberFormat().format(price).padEnd(4, '0')}</h3>
+          <h3>
+            {price.toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </h3>
         </ItemHeader>
         <ItemFooter>
           <input
