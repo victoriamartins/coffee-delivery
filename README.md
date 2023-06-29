@@ -21,11 +21,11 @@ are displayed bellow in different kinds of screen:
 
 ![interface form web](https://github.com/victoriamartins/coffee-delivery/blob/main/public/readme_interface_formulario_web.JPG)
 
-### Mobile
+### Mobile 
 
 ![interface home mobile](https://github.com/victoriamartins/coffee-delivery/blob/main/public/readme_interface_home_mobile.JPG)
 
-![interface form mobile](https://github.com/victoriamartins/coffee-delivery/blob/main/public/readme_interface_formulario_mobile.JPG)
+![interface form mobile](https://github.com/victoriamartins/coffee-delivery/blob/main/public/readme_interface_formulario_mobile.jpg)
 
 ## Tools, technologies & libs
 
