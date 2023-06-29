@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useState, useEffect } from 'react'
 import { DeliveryFormData } from '../pages/DeliveryForm'
+import { produce } from 'immer'
 
 interface CoffeeListInterface {
   id: string
@@ -59,24 +60,26 @@ export function CoffeeContextProvider({
     price: number,
     imageName: string,
   ) {
-    // setCoffeeList((state) => [...state, { id, coffeeAmount, price, imageName }])
     const coffeeToReplace = coffeeList.find((coffee) => coffee.id === id)
-    if (coffeeToReplace) {
-      const indexOfReplacement = coffeeList.indexOf(coffeeToReplace)
-
-      const newCoffeeList = coffeeList.map((coffee, index) => {
-        if (indexOfReplacement === index) {
-          const newAmount = Number(coffee.coffeeAmount) + Number(coffeeAmount)
-          return { ...coffee, coffeeAmount: newAmount }
-        }
-        return coffee
-      })
-      setCoffeeList(newCoffeeList)
+    if (!coffeeToReplace) {
+      setCoffeeList(
+        produce(coffeeList, (draft) => {
+          draft.push({
+            id,
+            coffeeAmount: Number(coffeeAmount),
+            price,
+            imageName,
+          })
+        }),
+      )
     } else {
-      setCoffeeList((state) => [
-        ...state,
-        { id, coffeeAmount, price, imageName },
-      ])
+      const indexToReplace = coffeeList.indexOf(coffeeToReplace)
+      setCoffeeList(
+        produce(coffeeList, (draft) => {
+          draft[indexToReplace].coffeeAmount =
+            Number(draft[indexToReplace].coffeeAmount) + Number(coffeeAmount)
+        }),
+      )
     }
   }
 
@@ -84,16 +87,11 @@ export function CoffeeContextProvider({
     const coffeeToReplace = coffeeList.find((coffee) => coffee.id === id)
     if (coffeeToReplace) {
       const indexOfReplacement = coffeeList.indexOf(coffeeToReplace)
-
-      const newCoffeeList = coffeeList.map((coffee, index) => {
-        if (indexOfReplacement === index) {
-          const newAmountOfCoffee = Number(newAmount)
-          return { ...coffee, coffeeAmount: newAmountOfCoffee }
-        }
-        return coffee
-      })
-
-      setCoffeeList(newCoffeeList)
+      setCoffeeList(
+        produce(coffeeList, (draft) => {
+          draft[indexOfReplacement].coffeeAmount = Number(newAmount)
+        }),
+      )
     }
   }
 
