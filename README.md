@@ -39,5 +39,5 @@ are displayed bellow in different kinds of screen:
 
 ## Next steps
 
-- [ ] useReducer to manage cart 
+- [x] useReducer to manage cart 
 - [ ] add BrasilAPI to improve user experience with address form
