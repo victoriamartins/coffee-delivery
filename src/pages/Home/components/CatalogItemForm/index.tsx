@@ -1,9 +1,10 @@
 import { ShoppingCart } from 'phosphor-react'
 import { FormContainer, AddItemToCart, ButtonCart, PriceTag } from './styles'
-import { useForm } from 'react-hook-form'
-import { useContext, useState } from 'react'
-import { CoffeeContext } from '../../../../contexts/CoffeeContext'
 import { CartNotification } from '../../../../components/CartNotification'
+import { CoffeeContext } from '../../../../contexts/CoffeeContext'
+import { useContext, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { CoffeeListInterface } from '../../../../reducer/reducer'
 
 interface ItemFormProps {
   price: number
@@ -12,9 +13,21 @@ interface ItemFormProps {
 }
 
 export function CatalogItemForm(props: ItemFormProps) {
-  const { register, handleSubmit, reset } = useForm()
-  const { addCoffeeToCart } = useContext(CoffeeContext)
+  const { addToList } = useContext(CoffeeContext)
+  const { handleSubmit, register, reset } = useForm()
   const [showNotification, setShowNotification] = useState(false)
+
+  const addCoffeeToList = (data: any) => {
+    const itemToAdd: CoffeeListInterface = {
+      name: props.name,
+      amount: Number(data.amount),
+      price: props.price,
+      image: props.imageName,
+    }
+    addToList(itemToAdd)
+    handleShowNotification()
+    reset()
+  }
 
   function handleShowNotification() {
     setShowNotification(true)
@@ -24,16 +37,10 @@ export function CatalogItemForm(props: ItemFormProps) {
     return () => clearTimeout(timer)
   }
 
-  const handleAddToCart = (data: any) => {
-    addCoffeeToCart(props.name, data.coffeeAmount, props.price, props.imageName)
-    reset()
-    handleShowNotification()
-  }
-
   const price = new Intl.NumberFormat().format(props.price).padEnd(4, '0')
 
   return (
-    <FormContainer onSubmit={handleSubmit(handleAddToCart)}>
+    <FormContainer onSubmit={handleSubmit(addCoffeeToList)}>
       <div>
         <span>R$</span>
         <PriceTag>{price}</PriceTag>
@@ -46,7 +53,7 @@ export function CatalogItemForm(props: ItemFormProps) {
           step={1}
           min={1}
           required
-          {...register('coffeeAmount', { valueAsNumber: true })}
+          {...register('amount')}
         />
 
         <ButtonCart type="submit">

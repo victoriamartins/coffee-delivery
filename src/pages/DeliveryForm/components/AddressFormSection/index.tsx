@@ -3,7 +3,6 @@ import { useFormContext } from 'react-hook-form'
 
 export function AddressFormSection() {
   const { register } = useFormContext()
-
   return (
     <InputContainer>
       <input

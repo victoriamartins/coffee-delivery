@@ -1,15 +1,15 @@
-import { StyledHeader, CartDivision, AddressDivision } from './styles'
+import { CartDivision, AddressDivision, StyledHeader } from './styles'
 import { MapPin, ShoppingCart } from 'phosphor-react'
 import { Badge } from '@mui/material'
-import { useContext } from 'react'
-import { CoffeeContext } from '../../contexts/CoffeeContext'
 import { NavLink } from 'react-router-dom'
 import logo from '../../assets/logo.svg'
+import { useContext } from 'react'
+import { CoffeeContext } from '../../contexts/CoffeeContext'
 
 export function Header() {
   const { coffeeList, deliveryInfo } = useContext(CoffeeContext)
-  const totalItems = coffeeList.reduce(
-    (sum, coffee) => sum + Number(coffee.coffeeAmount),
+  const badgeNumber = coffeeList.reduce(
+    (sum, coffee) => sum + Number(coffee.amount),
     0,
   )
   const badgeStyle = {
@@ -30,16 +30,15 @@ export function Header() {
       <CartDivision>
         <AddressDivision>
           <MapPin size={19.25} weight="fill" />
-          <span>
-            {deliveryInfo?.city && deliveryInfo?.state
-              ? `
-            ${deliveryInfo.city} - ${deliveryInfo.state}`
-              : `Local de entrega`}
-          </span>
+          {deliveryInfo ? (
+            <span>{`${deliveryInfo.city} - ${deliveryInfo.state}`}</span>
+          ) : (
+            <span>Local de entrega</span>
+          )}
         </AddressDivision>
 
         <NavLink to={'/entrega'}>
-          <Badge badgeContent={totalItems} sx={badgeStyle}>
+          <Badge badgeContent={badgeNumber} sx={badgeStyle}>
             <button>
               <ShoppingCart size={19.25} weight="fill" />
             </button>

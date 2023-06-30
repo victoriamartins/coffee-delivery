@@ -1,6 +1,5 @@
 import { CurrencyDollarSimple, MapPin, Timer } from 'phosphor-react'
 import image from '../../assets/successimg.png'
-import { useContext } from 'react'
 import {
   DeliveryInfo,
   GradientBorder,
@@ -9,6 +8,7 @@ import {
   ImageContainer,
   PageContainer,
 } from './styles'
+import { useContext } from 'react'
 import { CoffeeContext } from '../../contexts/CoffeeContext'
 
 export function OrderConfirmation() {
@@ -54,7 +54,10 @@ export function OrderConfirmation() {
               <div>
                 <p>Pagamento na entrega</p>
                 <p>
-                  <strong>{deliveryInfo?.paymentOption}</strong>
+                  <strong>
+                    {/* {deliveryInfo?.paymentOption} */}
+                    Cartão de Crédito
+                  </strong>
                 </p>
               </div>
             </div>

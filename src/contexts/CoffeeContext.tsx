@@ -1,27 +1,21 @@
-import { ReactNode, createContext, useState, useEffect } from 'react'
+import {
+  ReactNode,
+  createContext,
+  useReducer,
+  useState,
+  useEffect,
+} from 'react'
+import { CoffeeReducer, CoffeeListInterface } from '../reducer/reducer'
 import { DeliveryFormData } from '../pages/DeliveryForm'
-import { produce } from 'immer'
-
-interface CoffeeListInterface {
-  id: string
-  coffeeAmount: number
-  price: number
-  imageName: string
-}
 
 interface CoffeeContextInterface {
   coffeeList: CoffeeListInterface[]
   deliveryInfo: DeliveryFormData | undefined
-  addDeliveryInfo: (data: DeliveryFormData) => void
-  removeItemFromCart: (id: string) => void
-  addCoffeeToCart: (
-    id: string,
-    coffeeAmount: number,
-    price: number,
-    imageName: string,
-  ) => void
-  updateAmountInCart: (id: string, newAmount: number) => void
-  deleteCart: () => void
+  deleteList: () => void
+  addToList: (item: CoffeeListInterface) => void
+  addDeliveryInfo: (newInfo: DeliveryFormData) => void
+  updateList: (item: CoffeeListInterface) => void
+  deleteItem: (item: CoffeeListInterface) => void
 }
 
 interface CoffeeContextProviderProps {
@@ -33,17 +27,20 @@ export const CoffeeContext = createContext({} as CoffeeContextInterface)
 export function CoffeeContextProvider({
   children,
 }: CoffeeContextProviderProps) {
-  const [coffeeList, setCoffeeList] = useState<CoffeeListInterface[]>([])
+  const [coffeeList, dispatch] = useReducer(CoffeeReducer, [])
+  // eslint-disable-next-line no-unused-vars
   const [deliveryInfo, setDeliveryInfo] = useState<
     DeliveryFormData | undefined
-  >(getStoredInfo())
+  >(getStoredDeliveryInfo())
 
   useEffect(() => {
-    const stateJSON = JSON.stringify(deliveryInfo)
-    localStorage.setItem('@coffee-delivery:delivery-info:1.0.0', stateJSON)
+    localStorage.setItem(
+      '@coffee-delivery:delivery-info:1.0.0',
+      JSON.stringify(deliveryInfo),
+    )
   }, [deliveryInfo])
 
-  function getStoredInfo() {
+  function getStoredDeliveryInfo() {
     const storedAsJSON = localStorage.getItem(
       '@coffee-delivery:delivery-info:1.0.0',
     )
@@ -53,78 +50,32 @@ export function CoffeeContextProvider({
     return undefined
   }
 
-  // todo: this has to be shorter and cleaner, it'll probably go to usereduce!
-  function addCoffeeToCart(
-    id: string,
-    coffeeAmount: number,
-    price: number,
-    imageName: string,
-  ) {
-    const coffeeToReplace = coffeeList.find((coffee) => coffee.id === id)
-    if (!coffeeToReplace) {
-      setCoffeeList(
-        produce(coffeeList, (draft) => {
-          draft.push({
-            id,
-            coffeeAmount: Number(coffeeAmount),
-            price,
-            imageName,
-          })
-        }),
-      )
-    } else {
-      const indexToReplace = coffeeList.indexOf(coffeeToReplace)
-      setCoffeeList(
-        produce(coffeeList, (draft) => {
-          draft[indexToReplace].coffeeAmount =
-            Number(draft[indexToReplace].coffeeAmount) + Number(coffeeAmount)
-        }),
-      )
-    }
+  function addDeliveryInfo(newInfo: DeliveryFormData) {
+    setDeliveryInfo(newInfo)
   }
 
-  function updateAmountInCart(id: string, newAmount: number) {
-    const coffeeToReplace = coffeeList.find((coffee) => coffee.id === id)
-    if (coffeeToReplace) {
-      const indexOfReplacement = coffeeList.indexOf(coffeeToReplace)
-      setCoffeeList(
-        produce(coffeeList, (draft) => {
-          draft[indexOfReplacement].coffeeAmount = Number(newAmount)
-        }),
-      )
-    }
+  function deleteAllItemsFromCart() {
+    dispatch({ type: 'DELETE_CART', payload: {} as CoffeeListInterface })
   }
 
-  function removeItemFromCart(id: string) {
-    const newCoffeeList = coffeeList.filter((coffee) => coffee.id !== id)
-    setCoffeeList(newCoffeeList)
+  function addItemToCart(item: CoffeeListInterface) {
+    dispatch({
+      type: 'ADD_TO_CART',
+      payload: item,
+    })
   }
 
-  function deleteCart() {
-    setCoffeeList([])
+  function updateItemInCart(item: CoffeeListInterface) {
+    dispatch({
+      type: 'UPDATE_CART',
+      payload: item,
+    })
   }
 
-  function formatPaymentOptionToContext(rawString: string): string {
-    switch (rawString) {
-      case 'creditCard':
-        return 'Cartão de Crédito'
-      case 'debitCard':
-        return 'Cartão de Débito'
-      default:
-        return 'Dinheiro'
-    }
-  }
-
-  function addDeliveryInfo(data: DeliveryFormData) {
-    setDeliveryInfo({
-      zipCode: data.zipCode,
-      street: data.street,
-      stNumber: data.stNumber,
-      additionalInfo: data.additionalInfo,
-      neighborhood: data.neighborhood,
-      city: data.city,
-      state: data.state,
-      paymentOption: formatPaymentOptionToContext(data.paymentOption),
+  function deleteItem(item: CoffeeListInterface) {
+    dispatch({
+      type: 'DELETE_ITEM',
+      payload: item,
     })
   }
 
@@ -133,11 +84,11 @@ export function CoffeeContextProvider({
       value={{
         coffeeList,
         deliveryInfo,
+        deleteList: deleteAllItemsFromCart,
+        addToList: addItemToCart,
         addDeliveryInfo,
-        addCoffeeToCart,
-        removeItemFromCart,
-        updateAmountInCart,
-        deleteCart,
+        updateList: updateItemInCart,
+        deleteItem,
       }}
     >
       {children}

@@ -1,5 +1,4 @@
 import { CurrencyDollarSimple, MapPinLine } from 'phosphor-react'
-import { CoffeeItem } from './components/CoffeeItem/index'
 import {
   CoffeeListInCart,
   DeliveryHeader,
@@ -12,12 +11,13 @@ import {
 import { AddressFormSection } from './components/AddressFormSection'
 import { PaymentForm } from './components/PaymentFormSection'
 import { FormSubmitSection } from './components/FormSubmitSection'
-import { useContext } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CoffeeContext } from '../../contexts/CoffeeContext'
 import { NavLink, useNavigate } from 'react-router-dom'
 import * as zod from 'zod'
+import { CoffeeItem } from './components/CoffeeItem'
+import { useContext } from 'react'
+import { CoffeeContext } from '../../contexts/CoffeeContext'
 
 const validationOfDeliverySchema = zod.object({
   zipCode: zod.string().max(9),
@@ -34,7 +34,6 @@ export type DeliveryFormData = zod.infer<typeof validationOfDeliverySchema>
 
 export function DeliveryForm() {
   const { coffeeList } = useContext(CoffeeContext)
-
   return coffeeList.length > 0 ? <Form /> : <EmptyCart />
 }
 
@@ -51,9 +50,9 @@ function EmptyCart() {
 }
 
 function Form() {
-  const { coffeeList, addDeliveryInfo, deleteCart, deliveryInfo } =
-    useContext(CoffeeContext)
   const navigate = useNavigate()
+  const { coffeeList, deliveryInfo, addDeliveryInfo, deleteList } =
+    useContext(CoffeeContext)
   const empytValuesToForm = {
     zipCode: '',
     street: '',
@@ -78,9 +77,9 @@ function Form() {
     resolver: zodResolver(validationOfDeliverySchema),
     defaultValues: deliveryInfo ? filledValuesToForm : empytValuesToForm,
   })
-  const { reset, handleSubmit } = deliveryForm
+  const { handleSubmit, reset } = deliveryForm
 
-  const submitDeliveryInfo = (data: DeliveryFormData) => {
+  const submitForm = (data: DeliveryFormData) => {
     addDeliveryInfo({
       zipCode: data.zipCode,
       street: data.street,
@@ -92,11 +91,12 @@ function Form() {
       paymentOption: data.paymentOption,
     })
     reset()
-    deleteCart()
+    deleteList()
     navigate('/confirmacao')
   }
+
   return (
-    <FormContainer onSubmit={handleSubmit(submitDeliveryInfo)}>
+    <FormContainer onSubmit={handleSubmit(submitForm)}>
       <FormProvider {...deliveryForm}>
         <section>
           <Subtitle>Complete seu pedido</Subtitle>
@@ -136,20 +136,18 @@ function Form() {
           {/* List of Selected Coffees */}
           <div>
             <CoffeeListInCart>
-              {coffeeList.map((coffee) => (
-                <CoffeeItem
-                  name={coffee.id}
-                  price={coffee.price}
-                  imageName={coffee.imageName}
-                  coffeeAmount={coffee.coffeeAmount}
-                  key={coffee.id}
-                />
-              ))}
-              {/* <CoffeeItem
-              
-            /> */}
+              {coffeeList.map((coffee) => {
+                return (
+                  <CoffeeItem
+                    key={coffee.name}
+                    name={coffee.name}
+                    price={coffee.price}
+                    image={coffee.image}
+                    amount={coffee.amount}
+                  />
+                )
+              })}
             </CoffeeListInCart>
-
             {/* -----------------------Footer with price and submit */}
             <FormSubmitSection />
           </div>

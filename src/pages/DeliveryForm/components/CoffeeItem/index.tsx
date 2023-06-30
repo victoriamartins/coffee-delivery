@@ -1,4 +1,6 @@
 import { Trash } from 'phosphor-react'
+import { CoffeeListInterface } from '../../../../reducer/reducer'
+import { useContext, ChangeEvent } from 'react'
 import {
   CoffeeItemContainer,
   ItemFooter,
@@ -6,38 +8,27 @@ import {
   ItemHeader,
   RemoveItemButton,
 } from './styles'
-import { ChangeEvent, useContext } from 'react'
 import { CoffeeContext } from '../../../../contexts/CoffeeContext'
-
-interface CoffeeItemProps {
-  name: string
-  price: number
-  imageName: string
-  coffeeAmount: number
-}
 
 export function CoffeeItem({
   name,
+  amount,
   price,
-  imageName,
-  coffeeAmount,
-}: CoffeeItemProps) {
-  const { removeItemFromCart, updateAmountInCart } = useContext(CoffeeContext)
+  image,
+}: CoffeeListInterface) {
+  const { updateList, deleteItem } = useContext(CoffeeContext)
 
-  const handleUpdateItem = (event: ChangeEvent<HTMLInputElement>) => {
-    updateAmountInCart(name, Number(event.target.value))
+  const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newValue = Number(event.target.value)
+    updateList({ name, amount: newValue, price, image })
   }
-
   const handleDeleteItem = () => {
-    removeItemFromCart(name)
+    deleteItem({ name, amount, price, image })
   }
 
   return (
     <CoffeeItemContainer>
-      <img
-        src={`../../../src/assets/coffees/${imageName}`}
-        alt="xícara de café"
-      />
+      <img src={`../../../src/assets/coffees/${image}`} alt="xícara de café" />
       <ItemInfo>
         <ItemHeader>
           <span>{name}</span>
@@ -55,8 +46,8 @@ export function CoffeeItem({
             type="number"
             id="addCoffee"
             min={1}
-            defaultValue={coffeeAmount}
-            onChange={handleUpdateItem}
+            defaultValue={amount}
+            onChange={handleAmountChange}
           />
           <RemoveItemButton onClick={handleDeleteItem}>
             <Trash size={16} />
